@@ -2,9 +2,14 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.session.middlewares.request_logging import logger
+from aiogram.filters import Command
+
 from loader import db
+from aiogram.types.message import ContentType
 
+from handlers.users.pay import pre_checkout_query, successfull_payment, order
 
+from filters.contenttype import ContentTypeFilter
 def setup_handlers(dispatcher: Dispatcher) -> None:
     """HANDLERS"""
     from handlers import setup_routers
@@ -77,6 +82,11 @@ def main():
     dispatcher.startup.register(aiogram_on_startup_polling)
     dispatcher.shutdown.register(aiogram_on_shutdown_polling)
     asyncio.run(dispatcher.start_polling(bot, close_bot_session=True))
+
+    # dispatcher.message.register(order, Command(commands='pay'))
+    dispatcher.pre_checkout_query.register(pre_checkout_query)
+    dispatcher.message.register(successfull_payment,
+                                ContentTypeFilter(custom_content_type=[ContentType.SUCCESSFUL_PAYMENT]))
     # allowed_updates=['message', 'chat_member']
 
 
