@@ -7,7 +7,7 @@ from aiogram.filters import Command
 from loader import db
 from aiogram.types.message import ContentType
 
-from handlers.users.pay import pre_checkout_query, successfull_payment, order
+from handlers.users.pay import pre_checkout_query, successfull_payment, shipping_check
 
 from filters.contenttype import ContentTypeFilter
 def setup_handlers(dispatcher: Dispatcher) -> None:
@@ -87,6 +87,7 @@ def main():
     dispatcher.pre_checkout_query.register(pre_checkout_query)
     dispatcher.message.register(successfull_payment,
                                 ContentTypeFilter(custom_content_type=[ContentType.SUCCESSFUL_PAYMENT]))
+    dispatcher.shipping_query.register(shipping_check)
     # allowed_updates=['message', 'chat_member']
 
 
